@@ -1,0 +1,39 @@
+# day1
+
+use hr;
+select distinct department_id
+from employees;
+
+select job_id , name
+from employees;
+
+# 이름과 연봉을 출력하시오.
+SELECT first_name 이름, salary 월급,(salary+200)*12 as "계산된 연봉"
+FROM EMPLOYEES;
+
+select * from employees;
+
+# 연봉을 나타내지만, 커미션도 반영하여 나타내시오.
+select last_name, salary, salary*(1+coalesce(commission_pct,0))*12, ifnull(commission_pct,0) 
+from employees;
+
+# 성이 King인 직원들을 조회
+
+select *
+from employees
+where last_name = "king";
+
+select concat(concat('Name is ', first_name), concat(', last_name is ', last_name))  
+from employees;
+
+select *
+from employees
+#where department_id in (10,20)
+#where department_id = 10 or department_id = 20;
+#where salary between 5000 and 8000;
+#where salary >= 5000 and salary <= 8000
+#where department_id is null #[아직 부서에 배치되지 않은 사원 조회 => department_id가 null인 경우]
+#where commission_pct is not null  #커미션을 받는 사원을 조회
+where last_name like 'K%'
+order by 8 desc #8은 column 번호
+;
