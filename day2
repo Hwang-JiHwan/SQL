@@ -1,0 +1,132 @@
+## day2
+
+use hr;
+
+select concat('king','Steven');
+select last_name,first_name, concat(last_name, first_name) from employees;
+select last_name, length(last_name),substring(last_name,4)
+from employees;
+select salary, round(salary*(1+ifnull(commission_pct,0))*1290,-3) from employees;
+
+select now(), dayofweek(sysdate());
+select dayofweek(hire_date), hire_date, year(hire_date), month(hire_date) , day(hire_date) from employees;
+select year(now());
+select adddate(sysdate(), 2 );
+
+select hire_date, datediff(sysdate(),hire_date)/365.5 from employees;
+
+#select employee_id, concat(first_name,last_name), salary , hire_date, email, job_id,manager_id
+#from employees
+#where salary>= 10000 and commission_pct is not null and (department_id = 80 or 100)
+#order by hire_date asc;
+
+select employee_id 사번, concat(first_name, last_name) 성명, salary 급여, hire_date 입사일자, email 이메일주소 
+from employees
+where salary>= 10000 and commission_pct is not null and (department_id = 80 or 100) and manager_id is not null and job_id like 'P%'
+order by hire_date asc;
+
+select *
+from employees
+where 1=1  #and 조건문을 주석처리 하고 싶을때 (and나 or로 나열할때 )
+	and salary >= 10000
+	and last_name like 'P%';
+    
+    
+select date_format(sysdate(),'%M-%D-%Y %H:%i:%s');
+
+select hire_date from employees;
+select date_format(hire_date,'%d-%m-%Y') from employees;
+
+select concat(first_name, last_name)  성명 , format((round(salary*(1+ifnull(commission_pct,0))*12*1295 ,-3)),0) 연봉, round(datediff(sysdate(),hire_date)/365.5,2) 근속년수
+from employees
+where date_format(hire_date,'%Y')>=2000;
+
+# 급여등급을 함께 출력 5000이하 C / 10000까지 B / 15000까지 A / 그 이상 S
+select * from employees;
+select last_name, salary, case 
+		when salary <= 5000 then 'C'
+		when salary <= 10000 then 'B'
+		when salary <= 15000 then 'A'
+		else 'S'
+	end sal_grade
+from employees;
+
+# 성, 명, 부서번호, 부서명을 출력
+# 이러한 데이터가 어느 테이블에 존재하나? employees, departments에 존재하고 있다. (두개의 테이블에 존재하고 있음 하나로 join해야함.)
+
+select last_name, first_name , employees.department_id, department_name
+from employees, departments
+where employees.department_id = departments.department_id; #이렇게 중복되는 칼럼을 합치는 조건이 있어야 cartesian product가 만들어지지 않음.
+
+select e.last_name, e.first_name , e.department_id, d.department_name
+from employees e join departments d#table 알리아스
+ on e.department_id = d.department_id; #이렇게 중복되는 칼럼을 합치는 조건이 있어야 cartesian product가 만들어지지 않음.
+
+# 90번 부서의 이름검색?
+select department_name
+from departments
+where department_id = 90;
+
+select hire_date
+from employees
+where date_format(hire_date,'%Y')>=2000;
+
+#1
+select department_name,  last_name
+from departments d join employees e
+	on d.department_id = e.department_id
+	order by salary asc;
+
+#2
+select d.location_id,city,department_name
+from locations l join departments d
+	on l.location_id = d.location_id
+    where l.location_id = 1400 or l.location_id = 1500;
+    
+#3
+select date_format(hire_date, '%d-%m-%Y'), l.city, d.department_name 
+from employees e join departments d join locations l
+on e.department_id = d.department_id and d.location_id = l.location_id
+where e.job_id = 'IT_PROG';
+
+select(count(*)) from employees; # 총 사원 조회
+select(count(*)) from departments,employees;
+select 107*27;
+
+# EX01
+select employee_id, last_name, hire_date, email 
+from employees
+where 1=1
+	and salary >= 10000 
+    and commission_pct is not null 
+    and (department_id = 80 or department_id = 100) 
+    and manager_id is not null 
+    and job_id like 'P%'
+order by hire_date asc;
+
+# EX02
+select concat(first_name, last_name), format(round(salary*(1+ifnull(commission_pct,0)),-3)*12*1295,0), round(datediff(sysdate(),hire_date)/365.5,2) 
+from employees
+where date_format(hire_date,'%Y') >= '2000';
+
+# EX03-1
+select d.department_name,  e.last_name
+from employees e join departments d
+on e.department_id = d.department_id
+order by salary asc;
+
+# EX03-2
+select l.city, d.department_name 
+from locations l join departments d
+on l.location_id = d.location_id;
+
+# EX03-3
+select date_format(hire_date,'%d-%m-%Y'), d.department_name, l.city 
+from employees e join departments d join locations l
+on e.department_id = d.department_id and d.location_id = l.location_id
+where job_id = 'IT_PROG';
+
+
+
+
+
